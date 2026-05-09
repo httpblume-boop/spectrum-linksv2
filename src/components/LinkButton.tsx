@@ -22,12 +22,8 @@ export default function LinkButton({ link, creatorId }: Props) {
       body: JSON.stringify({ creator_id: creatorId, link_type: 'link', link_id: link.id }),
     })
 
-    if (link.js_redirect) {
-      const go = new Function(`window.location.href = '${link.url}'`)
-      go()
-    } else {
-      window.open(link.url, '_blank', 'noopener,noreferrer')
-    }
+    const go = new Function(`window.location.href = '/go?url=' + encodeURIComponent('${link.url}')`)
+    go()
   }
 
   return (

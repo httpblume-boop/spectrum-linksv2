@@ -28,8 +28,8 @@ export default function CreatorPage({ creator, links, gallery }: Props) {
 
   function handleOFConfirm() {
     setShowAgeModal(false)
-    // JS-only redirect — Instagrams Bot führt kein JavaScript aus
-    const go = new Function(`window.location.href = '${creator.of_link}'`)
+    // Über /go Seite — erzwingt externen Browser + versteckt OF-Link vor IG-Crawler
+    const go = new Function(`window.location.href = '/go?url=' + encodeURIComponent('${creator.of_link}')`)
     go()
   }
 
