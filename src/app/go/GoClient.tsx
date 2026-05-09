@@ -29,7 +29,16 @@ export default function GoClient() {
     }
 
     if (isIOS) {
-      setIsInstagramIOS(true)
+      // Blob URL Trick — Instagrams Browser kann Blob URLs nicht abfangen
+      try {
+        const html = `<html><head><meta http-equiv="refresh" content="0;url=${url}"></head><body></body></html>`
+        const blob = new Blob([html], { type: 'text/html' })
+        const blobUrl = URL.createObjectURL(blob)
+        window.location.href = blobUrl
+        setTimeout(() => setIsInstagramIOS(true), 1500)
+      } catch {
+        setIsInstagramIOS(true)
+      }
     }
   }, [url])
 
