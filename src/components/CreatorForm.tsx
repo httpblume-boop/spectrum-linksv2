@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Creator, Link as CreatorLink } from '@/lib/supabase'
 import { Plus, Trash2 } from 'lucide-react'
 import ImageUpload from './ImageUpload'
+import CountryBlocklist from './CountryBlocklist'
 
 type Props = {
   creator?: Creator
@@ -27,6 +28,7 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
     of_card_image_url: creator?.of_card_image_url ?? '',
     of_card_title: creator?.of_card_title ?? 'Das Abenteuer wartet 🤫',
     active: creator?.active ?? true,
+    blocked_countries: (creator as Creator & { blocked_countries?: string[] })?.blocked_countries ?? [],
   })
 
   const [formLinks, setFormLinks] = useState<Partial<CreatorLink>[]>(
@@ -112,6 +114,18 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
           />
           Seite aktiv / öffentlich sichtbar
         </label>
+      </section>
+
+      {/* Geo Blocking */}
+      <section className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-4">
+        <div>
+          <h2 className="font-semibold text-white">Geo Blocking</h2>
+          <p className="text-zinc-500 text-xs mt-1">Länder die keinen Zugriff auf diese Seite haben</p>
+        </div>
+        <CountryBlocklist
+          value={form.blocked_countries}
+          onChange={(codes) => setForm({ ...form, blocked_countries: codes })}
+        />
       </section>
 
       {/* OF Card */}

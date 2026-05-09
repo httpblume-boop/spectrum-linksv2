@@ -61,8 +61,8 @@ export default function ImageCropper({ imageSrc, aspect, onComplete, onCancel }:
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/90 flex flex-col">
-      <div className="relative flex-1">
+    <div className="fixed inset-0 z-50 bg-black/90 flex flex-col" style={{ zIndex: 9999 }}>
+      <div className="relative" style={{ height: '70vh' }}>
         <Cropper
           image={imageSrc}
           crop={crop}
