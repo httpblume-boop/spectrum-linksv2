@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { Creator, Link, GalleryImage } from '@/lib/supabase'
 import AgeModal from './AgeModal'
@@ -16,42 +16,39 @@ type Props = {
 export default function CreatorPage({ creator, links, gallery }: Props) {
   const [showAgeModal, setShowAgeModal] = useState(false)
   const [galleryIndex, setGalleryIndex] = useState<number | null>(null)
+  const [ageConfirmed, setAgeConfirmed] = useState(false)
+  const pendingLinkRef = useRef<HTMLAnchorElement | null>(null)
 
-  function handleOFClick() {
-    setShowAgeModal(true)
-    fetch('/api/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ creator_id: creator.id, link_type: 'of_link' }),
-    })
-  }
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem('age_confirmed') === '1') {
+        setAgeConfirmed(true)
+      }
+    } catch {}
+  }, [])
 
-  function handleOFConfirm() {
-    setShowAgeModal(false)
-
-    // OF Link via Function() konstruieren — versteckt vor IG-Crawler
-    const ofUrl = (new Function(`return '${creator.of_link}'`))() as string
-
-    const ua = navigator.userAgent
-    const isInstagram = ua.includes('Instagram')
-    const isAndroid = ua.includes('Android')
-
-    // Android Instagram → Intent öffnet Chrome direkt
-    if (isInstagram && isAndroid) {
-      const stripped = ofUrl.replace(/^https?:\/\//, '')
-      window.location.href = `intent://${stripped}#Intent;scheme=https;package=com.android.chrome;end`
+  function handleOFCardClick(e: React.MouseEvent<HTMLAnchorElement>) {
+    if (ageConfirmed) {
+      // Echter Anchor-Click läuft durch — escaped IG iOS-Browser
       return
     }
+    e.preventDefault()
+    pendingLinkRef.current = e.currentTarget
+    setShowAgeModal(true)
+  }
 
-    // iOS / Desktop / alle anderen → echter Anchor-Click im User-Click-Kontext
-    // Das umgeht Instagrams iOS-Browser am zuverlässigsten
-    const a = document.createElement('a')
-    a.href = ofUrl
-    a.target = '_blank'
-    a.rel = 'noopener noreferrer'
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
+  function handleAgeConfirm() {
+    setShowAgeModal(false)
+    setAgeConfirmed(true)
+    try { sessionStorage.setItem('age_confirmed', '1') } catch {}
+
+    // Den ursprünglichen Link nochmal klicken — als echter User-Click
+    if (pendingLinkRef.current) {
+      const link = pendingLinkRef.current
+      pendingLinkRef.current = null
+      // setTimeout damit der Modal-Close-State erst durch ist
+      setTimeout(() => link.click(), 0)
+    }
   }
 
   return (
@@ -90,11 +87,15 @@ export default function CreatorPage({ creator, links, gallery }: Props) {
         )}
       </div>
 
-      {/* OF Card */}
+      {/* OF Card — echter <a> Tag mit target="_blank" */}
       <div className="w-full max-w-lg px-5 mt-6">
-        <button
-          onClick={handleOFClick}
-          className="relative w-full rounded-2xl overflow-hidden cursor-pointer group"
+        <a
+          href={`/r/${creator.slug}/of`}
+          target="_blank"
+          rel="noopener noreferrer"
+          referrerPolicy="no-referrer"
+          onClick={handleOFCardClick}
+          className="relative w-full block rounded-2xl overflow-hidden cursor-pointer group"
         >
           {creator.of_card_image_url ? (
             <Image
@@ -111,14 +112,14 @@ export default function CreatorPage({ creator, links, gallery }: Props) {
           <div className="absolute bottom-4 left-0 right-0 text-center">
             <p className="text-white font-bold text-lg drop-shadow">{creator.of_card_title}</p>
           </div>
-        </button>
+        </a>
       </div>
 
       {/* Zusätzliche Links */}
       {links.length > 0 && (
         <div className="w-full max-w-lg px-5 mt-4 flex flex-col gap-3">
           {links.map((link) => (
-            <LinkButton key={link.id} link={link} creatorId={creator.id} />
+            <LinkButton key={link.id} link={link} creator={creator} />
           ))}
         </div>
       )}
@@ -152,8 +153,8 @@ export default function CreatorPage({ creator, links, gallery }: Props) {
       {/* Modals */}
       <AgeModal
         open={showAgeModal}
-        onConfirm={handleOFConfirm}
-        onCancel={() => setShowAgeModal(false)}
+        onConfirm={handleAgeConfirm}
+        onCancel={() => { setShowAgeModal(false); pendingLinkRef.current = null }}
       />
       {galleryIndex !== null && (
         <GalleryModal
