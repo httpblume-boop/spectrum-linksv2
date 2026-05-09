@@ -27,7 +27,7 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
     avatar_url: creator?.avatar_url ?? '',
     of_link: creator?.of_link ?? '',
     of_card_image_url: creator?.of_card_image_url ?? '',
-    of_card_title: creator?.of_card_title ?? 'Das Abenteuer wartet 🤫',
+    of_card_title: creator?.of_card_title ?? '',
     active: creator?.active ?? true,
     blocked_countries: (creator as Creator & { blocked_countries?: string[] })?.blocked_countries ?? [],
   })
@@ -135,7 +135,7 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
         <h2 className="font-semibold text-white">OnlyFans Card</h2>
         <Field label="OF Link" value={form.of_link} onChange={(v) => setForm({ ...form, of_link: v })} placeholder="https://onlyfans.com/..." />
         <ImageUpload label="Card Bild" value={form.of_card_image_url} onChange={(v) => setForm({ ...form, of_card_image_url: v })} aspect="card" />
-        <Field label="Card Titel" value={form.of_card_title} onChange={(v) => setForm({ ...form, of_card_title: v })} />
+        <Field label="Card Titel (optional)" value={form.of_card_title} onChange={(v) => setForm({ ...form, of_card_title: v })} placeholder="z.B. Klick hier 🔥" />
       </section>
 
       {/* Zusätzliche Links */}

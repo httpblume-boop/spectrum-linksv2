@@ -115,10 +115,14 @@ export default function CreatorPage({ creator, links, gallery }: Props) {
           ) : (
             <div className="w-full h-52 bg-gradient-to-br from-zinc-800 to-zinc-900" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-          <div className="absolute bottom-4 left-0 right-0 text-center">
-            <p className="text-white font-bold text-lg drop-shadow">{creator.of_card_title}</p>
-          </div>
+          {creator.of_card_title && (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute bottom-4 left-0 right-0 text-center">
+                <p className="text-white font-bold text-lg drop-shadow">{creator.of_card_title}</p>
+              </div>
+            </>
+          )}
         </a>
       </div>
 

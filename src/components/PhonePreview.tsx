@@ -92,10 +92,14 @@ function PreviewContent({
           ) : (
             <div className="w-full h-36 bg-gradient-to-br from-zinc-800 to-zinc-900" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-          <div className="absolute bottom-3 left-0 right-0 text-center px-3">
-            <p className="text-white font-bold text-sm drop-shadow">{ofCardTitle}</p>
-          </div>
+          {ofCardTitle && (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute bottom-3 left-0 right-0 text-center px-3">
+                <p className="text-white font-bold text-sm drop-shadow">{ofCardTitle}</p>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
