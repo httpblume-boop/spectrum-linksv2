@@ -29,11 +29,14 @@ export default async function Page({ params }: { params: Promise<{ creator: stri
 
   if (!creator) notFound()
 
-  // Instagram In-App Browser → "Open in browser" Anleitung zeigen
+  // Instagram In-App Browser → Auto-Escape mit instagram://extbrowser Schema
   const headersList = await headers()
   const ua = headersList.get('user-agent') ?? ''
+  const host = headersList.get('host') ?? ''
+  const proto = headersList.get('x-forwarded-proto') ?? 'https'
   if (/Instagram/i.test(ua)) {
-    return <InstagramBreakout creatorName={creator.name} bannerUrl={creator.banner_url} />
+    const pageUrl = `${proto}://${host}/${slug}?ref=ig-breakout`
+    return <InstagramBreakout creatorName={creator.name} bannerUrl={creator.banner_url} pageUrl={pageUrl} />
   }
 
   const { data: links } = await supabase

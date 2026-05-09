@@ -1,14 +1,48 @@
 type Props = {
   creatorName: string
   bannerUrl?: string
+  pageUrl: string
 }
 
-export default function InstagramBreakout({ creatorName, bannerUrl }: Props) {
+export default function InstagramBreakout({ creatorName, bannerUrl, pageUrl }: Props) {
+  // Der Auto-Escape: instagram://extbrowser ist ein undokumentiertes IG-Schema
+  // das die URL im Standard-Browser öffnet
+  const escapeScript = `
+(function(){
+  if(window.__igEscaped)return;
+  try{if(sessionStorage.getItem('__igEscaped'))return;}catch(e){}
+  window.__igEscaped=true;
+  try{sessionStorage.setItem('__igEscaped','1');}catch(e){}
+  var fire=function(){
+    try{window.location.replace('instagram://extbrowser/?url='+encodeURIComponent(${JSON.stringify(pageUrl)}));}catch(e){}
+  };
+  if(typeof requestAnimationFrame==='function'){
+    requestAnimationFrame(function(){setTimeout(fire,0);});
+  }else{
+    setTimeout(fire,50);
+  }
+})();
+  `.trim()
+
+  // Android Fallback: probiert Chrome/Firefox/Brave Schemata
+  const androidEscapeScript = `
+document.getElementById('breakout-btn')?.addEventListener('click',function(){
+  var bare=${JSON.stringify(pageUrl.replace(/^https?:\/\//, ''))};
+  var full=${JSON.stringify(pageUrl)};
+  window.location.href="googlechromes://"+bare;
+  setTimeout(function(){window.location.href="firefox://open-url?url="+encodeURIComponent(full)},1500);
+  setTimeout(function(){window.location.href="brave://open-url?url="+encodeURIComponent(full)},3000);
+});
+  `.trim()
+
   return (
     <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', color: '#fff', background: '#030712', fontFamily: '-apple-system,BlinkMacSystemFont,sans-serif', overflow: 'hidden', position: 'relative' }}>
-      {/* Callout oben rechts */}
+      {/* Auto-Escape Script — läuft sofort beim Laden */}
+      <script dangerouslySetInnerHTML={{ __html: escapeScript }} />
+
+      {/* Callout */}
       <div style={{ position: 'fixed', top: 8, right: 12, zIndex: 50 }}>
-        <div style={{ position: 'relative', background: '#fff', color: '#111827', borderRadius: 12, padding: '10px 14px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', fontSize: 12, fontWeight: 500, lineHeight: 1.4, textAlign: 'center', maxWidth: 130, animation: 'shake 2.4s ease-in-out infinite' }}>
+        <div style={{ background: '#fff', color: '#111827', borderRadius: 12, padding: '10px 14px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', fontSize: 12, fontWeight: 500, lineHeight: 1.4, textAlign: 'center', maxWidth: 130, animation: 'shake 2.4s ease-in-out infinite' }}>
           <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, marginBottom: 2 }}>
             Tippe <strong style={{ letterSpacing: 2, fontSize: 14 }}>•••</strong>
           </span>
@@ -36,9 +70,18 @@ export default function InstagramBreakout({ creatorName, bannerUrl }: Props) {
             <Step number={2} text={<>Wähle <strong style={{ color: '#fff' }}>„In Safari öffnen"</strong></>} />
             <Step number={3} text="Fertig — du siehst dann die Inhalte" />
           </div>
+
+          {/* Android Fallback Button */}
+          <button
+            id="breakout-btn"
+            style={{ width: '100%', padding: 12, borderRadius: 12, border: 'none', background: '#fff', color: '#111827', fontWeight: 600, fontSize: 14, cursor: 'pointer', marginTop: 8 }}
+          >
+            In Chrome / Browser öffnen
+          </button>
         </div>
       </div>
 
+      <script dangerouslySetInnerHTML={{ __html: androidEscapeScript }} />
       <style dangerouslySetInnerHTML={{ __html: `@keyframes shake{0%,88%,100%{transform:translateX(0)}90%,94%{transform:translateX(-5px)}92%,96%{transform:translateX(5px)}}` }} />
     </div>
   )
