@@ -25,7 +25,15 @@ export default function CreatorPage({ creator, links, gallery }: Props) {
         setAgeConfirmed(true)
       }
     } catch {}
-  }, [])
+
+    // Page View tracken
+    fetch('/api/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ creator_id: creator.id, event_type: 'page_view' }),
+      keepalive: true,
+    }).catch(() => {})
+  }, [creator.id])
 
   function handleOFCardClick(e: React.MouseEvent<HTMLAnchorElement>) {
     if (ageConfirmed) {

@@ -18,7 +18,7 @@ export default async function EditCreatorPage({ params }: { params: Promise<{ id
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white p-6">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <Link href="/admin" className="flex items-center gap-2 text-zinc-400 hover:text-white mb-6 text-sm">
           <ArrowLeft size={16} /> Zurück
         </Link>

@@ -6,6 +6,7 @@ import { Creator, Link as CreatorLink } from '@/lib/supabase'
 import { Plus, Trash2 } from 'lucide-react'
 import ImageUpload from './ImageUpload'
 import CountryBlocklist from './CountryBlocklist'
+import PhonePreview from './PhonePreview'
 
 type Props = {
   creator?: Creator
@@ -93,7 +94,8 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <div className="grid lg:grid-cols-[1fr_360px] gap-8 items-start">
+      <form onSubmit={handleSubmit} className="space-y-8 min-w-0">
       {/* Basis */}
       <section className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-4">
         <h2 className="font-semibold text-white">Profil</h2>
@@ -243,7 +245,20 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
           Abbrechen
         </button>
       </div>
-    </form>
+      </form>
+
+      <PhonePreview
+        name={form.name}
+        handle={form.handle}
+        bio={form.bio}
+        bannerUrl={form.banner_url}
+        avatarUrl={form.avatar_url}
+        ofCardImageUrl={form.of_card_image_url}
+        ofCardTitle={form.of_card_title}
+        links={formLinks}
+        gallery={gallery}
+      />
+    </div>
   )
 }
 
