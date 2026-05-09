@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Creator, Link, GalleryImage } from '@/lib/supabase'
 import AgeModal from './AgeModal'
@@ -17,7 +17,7 @@ export default function CreatorPage({ creator, links, gallery }: Props) {
   const [showAgeModal, setShowAgeModal] = useState(false)
   const [galleryIndex, setGalleryIndex] = useState<number | null>(null)
   const [ageConfirmed, setAgeConfirmed] = useState(false)
-  const pendingLinkRef = useRef<HTMLAnchorElement | null>(null)
+  const [pendingUrl, setPendingUrl] = useState<string | null>(null)
 
   useEffect(() => {
     try {
@@ -33,21 +33,20 @@ export default function CreatorPage({ creator, links, gallery }: Props) {
       return
     }
     e.preventDefault()
-    pendingLinkRef.current = e.currentTarget
+    setPendingUrl(e.currentTarget.href)
     setShowAgeModal(true)
   }
 
   function handleAgeConfirm() {
+    const url = pendingUrl
     setShowAgeModal(false)
     setAgeConfirmed(true)
+    setPendingUrl(null)
     try { sessionStorage.setItem('age_confirmed', '1') } catch {}
 
-    // Den ursprünglichen Link nochmal klicken — als echter User-Click
-    if (pendingLinkRef.current) {
-      const link = pendingLinkRef.current
-      pendingLinkRef.current = null
-      // setTimeout damit der Modal-Close-State erst durch ist
-      setTimeout(() => link.click(), 0)
+    // window.open im User-Click-Kontext — wie Kollegen-Implementation
+    if (url) {
+      window.open(url, '_blank', 'noreferrer,noopener')
     }
   }
 
@@ -154,7 +153,7 @@ export default function CreatorPage({ creator, links, gallery }: Props) {
       <AgeModal
         open={showAgeModal}
         onConfirm={handleAgeConfirm}
-        onCancel={() => { setShowAgeModal(false); pendingLinkRef.current = null }}
+        onCancel={() => { setShowAgeModal(false); setPendingUrl(null) }}
       />
       {galleryIndex !== null && (
         <GalleryModal
