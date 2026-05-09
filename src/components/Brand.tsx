@@ -1,10 +1,18 @@
-export function BrandMark({ size = 28 }: { size?: number }) {
+import Image from 'next/image'
+
+export function BrandMark({ size = 36 }: { size?: number }) {
   return (
     <div
-      className="flex items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 shadow-lg shadow-purple-900/50"
+      className="relative rounded-xl overflow-hidden shadow-lg shadow-purple-900/50 flex-shrink-0"
       style={{ width: size, height: size }}
     >
-      <span className="text-white font-black" style={{ fontSize: size * 0.55 }}>S</span>
+      <Image
+        src="/logo.png"
+        alt="Spectrum Studios"
+        width={size}
+        height={size}
+        className="object-cover"
+      />
     </div>
   )
 }
@@ -12,10 +20,10 @@ export function BrandMark({ size = 28 }: { size?: number }) {
 export function BrandHeader() {
   return (
     <div className="flex items-center gap-3">
-      <BrandMark size={36} />
+      <BrandMark size={40} />
       <div>
         <p className="text-white font-bold text-lg leading-tight">Spectrum</p>
-        <p className="text-purple-300/60 text-xs leading-tight tracking-wider uppercase">Studios</p>
+        <p className="text-purple-300/60 text-xs leading-tight tracking-[0.2em] uppercase">Studios</p>
       </div>
     </div>
   )
