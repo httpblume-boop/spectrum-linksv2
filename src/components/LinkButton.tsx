@@ -1,0 +1,42 @@
+'use client'
+
+import { Link } from '@/lib/supabase'
+import { Send, ExternalLink } from 'lucide-react'
+
+const ICONS: Record<string, React.ReactNode> = {
+  instagram: <span className="text-base">📷</span>,
+  telegram: <Send size={18} />,
+  link: <ExternalLink size={18} />,
+}
+
+type Props = {
+  link: Link
+  creatorId: string
+}
+
+export default function LinkButton({ link, creatorId }: Props) {
+  function handleClick() {
+    fetch('/api/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ creator_id: creatorId, link_type: 'link', link_id: link.id }),
+    })
+
+    if (link.js_redirect) {
+      const go = new Function(`window.location.href = '${link.url}'`)
+      go()
+    } else {
+      window.open(link.url, '_blank', 'noopener,noreferrer')
+    }
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      className="w-full flex items-center justify-center gap-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white font-medium py-3.5 rounded-xl transition-colors"
+    >
+      {ICONS[link.icon] ?? ICONS.link}
+      {link.title}
+    </button>
+  )
+}
