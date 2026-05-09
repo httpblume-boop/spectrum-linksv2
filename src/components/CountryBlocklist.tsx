@@ -83,28 +83,28 @@ export default function CountryBlocklist({ value, onChange }: Props) {
         placeholder="Land suchen und hinzufügen..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full bg-zinc-800 border border-zinc-700 text-white rounded-xl px-4 py-2.5 text-sm outline-none focus:border-zinc-500"
+        className="w-full bg-[#1f1638]/60 border border-purple-900/40 text-white rounded-xl px-4 py-2.5 text-sm outline-none focus:border-purple-500 transition-colors"
       />
 
       {/* Dropdown */}
       {search && filtered.length > 0 && (
-        <div className="bg-zinc-800 border border-zinc-700 rounded-xl overflow-hidden">
+        <div className="bg-[#1f1638] border border-purple-900/40 rounded-xl overflow-hidden">
           {filtered.slice(0, 8).map((c) => (
             <button
               key={c.code}
               type="button"
               onClick={() => add(c.code)}
-              className="w-full text-left px-4 py-2.5 text-sm text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors flex items-center justify-between"
+              className="w-full text-left px-4 py-2.5 text-sm text-purple-200/80 hover:bg-purple-900/40 hover:text-white transition-colors flex items-center justify-between"
             >
               {c.name}
-              <span className="text-zinc-500 text-xs">{c.code}</span>
+              <span className="text-purple-300/40 text-xs">{c.code}</span>
             </button>
           ))}
         </div>
       )}
 
       {value.length === 0 && !search && (
-        <p className="text-zinc-600 text-xs">Noch keine Länder gesperrt</p>
+        <p className="text-purple-300/40 text-xs">Noch keine Länder gesperrt</p>
       )}
     </div>
   )

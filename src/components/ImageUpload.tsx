@@ -64,9 +64,9 @@ export default function ImageUpload({ label, value, onChange, aspect = 'square' 
   return (
     <>
       <div className="space-y-1.5">
-        {label && <span className="text-sm text-zinc-400">{label}</span>}
+        {label && <span className="text-sm text-purple-300/70">{label}</span>}
         <div
-          className={`relative w-full ${ASPECT_CLASSES[aspect]} rounded-xl overflow-hidden border border-zinc-700 bg-zinc-800 cursor-pointer group`}
+          className={`relative w-full ${ASPECT_CLASSES[aspect]} rounded-xl overflow-hidden border border-purple-900/40 bg-[#1f1638]/60 cursor-pointer group`}
           onClick={() => !loading && inputRef.current?.click()}
         >
           {value ? (
@@ -87,7 +87,7 @@ export default function ImageUpload({ label, value, onChange, aspect = 'square' 
               </button>
             </>
           ) : (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-zinc-500 hover:text-zinc-300 transition-colors">
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-purple-300/50 hover:text-purple-200 transition-colors">
               {loading ? (
                 <Loader2 size={24} className="animate-spin" />
               ) : (

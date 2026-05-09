@@ -2,6 +2,8 @@ import { requireAdmin } from '@/lib/auth'
 import { getServiceClient } from '@/lib/supabase'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import { BrandHeader } from '@/components/Brand'
+import Footer from '@/components/Footer'
 
 export default async function AnalyticsPage({
   searchParams,
@@ -84,11 +86,15 @@ export default async function AnalyticsPage({
   const maxDayValue = Math.max(1, ...dayKeys.map((d) => Math.max(pvByDay[d] ?? 0, clicksByDay[d] ?? 0)))
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white p-6">
-      <div className="max-w-6xl mx-auto">
-        <Link href="/admin" className="flex items-center gap-2 text-zinc-400 hover:text-white mb-6 text-sm">
-          <ArrowLeft size={16} /> Zurück
-        </Link>
+    <div className="min-h-screen bg-[#0a0612] text-white p-6 relative">
+      <div className="fixed inset-0 bg-gradient-to-br from-purple-950/30 via-transparent to-purple-900/10 pointer-events-none" />
+      <div className="relative max-w-6xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <Link href="/admin" className="flex items-center gap-2 text-purple-300/70 hover:text-white text-sm transition-colors">
+            <ArrowLeft size={16} /> Zurück zum Dashboard
+          </Link>
+          <BrandHeader />
+        </div>
 
         <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
           <h1 className="text-2xl font-bold">Analytics</h1>
@@ -97,7 +103,7 @@ export default async function AnalyticsPage({
               <Link
                 key={d}
                 href={`/admin/analytics?${creatorId ? `creator=${creatorId}&` : ''}days=${d}`}
-                className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${days === d ? 'bg-white text-black font-semibold' : 'bg-zinc-800 text-zinc-400 hover:text-white'}`}
+                className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${days === d ? 'bg-gradient-to-br from-purple-500 to-purple-700 text-white font-semibold shadow-lg shadow-purple-900/50' : 'bg-[#1f1638]/60 border border-purple-900/40 text-purple-300/70 hover:text-white'}`}
               >
                 {d} Tage
               </Link>
@@ -109,7 +115,7 @@ export default async function AnalyticsPage({
         <div className="flex gap-2 flex-wrap mb-6">
           <Link
             href={`/admin/analytics?days=${days}`}
-            className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${!creatorId ? 'bg-white text-black font-semibold' : 'bg-zinc-800 text-zinc-400 hover:text-white'}`}
+            className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${!creatorId ? 'bg-gradient-to-br from-purple-500 to-purple-700 text-white font-semibold shadow-lg shadow-purple-900/50' : 'bg-[#1f1638]/60 border border-purple-900/40 text-purple-300/70 hover:text-white'}`}
           >
             Alle Creator
           </Link>
@@ -117,7 +123,7 @@ export default async function AnalyticsPage({
             <Link
               key={c.id}
               href={`/admin/analytics?creator=${c.id}&days=${days}`}
-              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${creatorId === c.id ? 'bg-white text-black font-semibold' : 'bg-zinc-800 text-zinc-400 hover:text-white'}`}
+              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${creatorId === c.id ? 'bg-gradient-to-br from-purple-500 to-purple-700 text-white font-semibold shadow-lg shadow-purple-900/50' : 'bg-[#1f1638]/60 border border-purple-900/40 text-purple-300/70 hover:text-white'}`}
             >
               {c.name}
             </Link>
@@ -142,13 +148,13 @@ export default async function AnalyticsPage({
                 <div key={d} className="flex-1 flex flex-col items-center gap-1 group min-w-0">
                   <div className="w-full flex flex-col gap-0.5 justify-end h-32">
                     <div
-                      className="w-full bg-zinc-700 rounded-sm relative group/bar"
+                      className="w-full bg-purple-900/60 rounded-sm relative group/bar"
                       style={{ height: `${(pv / maxDayValue) * 100}%`, minHeight: pv ? 2 : 0 }}
                     >
                       <Tooltip text={`${pv} Views`} />
                     </div>
                     <div
-                      className="w-full bg-white rounded-sm relative group/bar"
+                      className="w-full bg-gradient-to-t from-purple-500 to-purple-300 rounded-sm relative group/bar"
                       style={{ height: `${(cl / maxDayValue) * 100}%`, minHeight: cl ? 2 : 0 }}
                     >
                       <Tooltip text={`${cl} Klicks`} />
@@ -159,8 +165,8 @@ export default async function AnalyticsPage({
             })}
           </div>
           <div className="flex gap-4 text-xs text-zinc-500 mt-3">
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 bg-zinc-700 rounded-sm" /> Views</span>
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 bg-white rounded-sm" /> Klicks</span>
+            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 bg-purple-900/60 rounded-sm" /> Views</span>
+            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 bg-gradient-to-t from-purple-500 to-purple-300 rounded-sm" /> Klicks</span>
           </div>
         </Card>
 
@@ -176,7 +182,7 @@ export default async function AnalyticsPage({
           {/* Top Links */}
           <Card title="Top Links">
             {Object.values(byLink).length === 0 ? (
-              <p className="text-zinc-600 text-sm">Noch keine Link-Klicks</p>
+              <p className="text-purple-300/40 text-sm">Noch keine Link-Klicks</p>
             ) : (
               <div className="space-y-2">
                 {Object.values(byLink)
@@ -192,7 +198,7 @@ export default async function AnalyticsPage({
           {!creatorId && (
             <Card title="Klicks pro Creator">
               {Object.entries(byCreator).length === 0 ? (
-                <p className="text-zinc-600 text-sm">Keine Daten</p>
+                <p className="text-purple-300/40 text-sm">Keine Daten</p>
               ) : (
                 <div className="space-y-2">
                   {Object.entries(byCreator)
@@ -206,6 +212,8 @@ export default async function AnalyticsPage({
             </Card>
           )}
         </div>
+
+        <Footer />
       </div>
     </div>
   )
@@ -229,17 +237,17 @@ function flagFor(code: string): string {
 
 function StatCard({ label, value, sub, highlight }: { label: string; value: number; sub?: string; highlight?: boolean }) {
   return (
-    <div className={`bg-zinc-900 border rounded-2xl p-5 ${highlight ? 'border-white/30' : 'border-zinc-800'}`}>
-      <p className="text-zinc-400 text-xs mb-1">{label}</p>
+    <div className={`bg-[#16102b]/80 backdrop-blur border rounded-2xl p-5 ${highlight ? 'border-purple-500/50 shadow-lg shadow-purple-900/30' : 'border-purple-900/40'}`}>
+      <p className="text-purple-300/60 text-xs mb-1">{label}</p>
       <p className="text-3xl font-bold">{value.toLocaleString('de-DE')}</p>
-      {sub && <p className="text-zinc-500 text-xs mt-1">{sub}</p>}
+      {sub && <p className="text-purple-300/40 text-xs mt-1">{sub}</p>}
     </div>
   )
 }
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
+    <div className="bg-[#16102b]/80 backdrop-blur border border-purple-900/40 rounded-2xl p-5">
       <h2 className="font-semibold mb-4">{title}</h2>
       {children}
     </div>
@@ -259,7 +267,7 @@ function BreakdownCard({
   return (
     <Card title={title}>
       {entries.length === 0 ? (
-        <p className="text-zinc-600 text-sm">{empty ?? 'Keine Daten'}</p>
+        <p className="text-purple-300/40 text-sm">{empty ?? 'Keine Daten'}</p>
       ) : (
         <div className="space-y-2">
           {entries.map(([key, count]) => (
@@ -276,11 +284,11 @@ function Bar({ label, value, max }: { label: string; value: number; max: number 
   return (
     <div className="text-sm">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-zinc-300 truncate pr-3">{label}</span>
-        <span className="text-zinc-400 text-xs flex-shrink-0">{value}</span>
+        <span className="text-purple-100/90 truncate pr-3">{label}</span>
+        <span className="text-purple-300/60 text-xs flex-shrink-0">{value}</span>
       </div>
-      <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-        <div className="h-full bg-white rounded-full" style={{ width: `${pct}%` }} />
+      <div className="h-1.5 bg-[#1f1638]/80 rounded-full overflow-hidden">
+        <div className="h-full bg-gradient-to-r from-purple-500 to-purple-300 rounded-full" style={{ width: `${pct}%` }} />
       </div>
     </div>
   )
@@ -288,7 +296,7 @@ function Bar({ label, value, max }: { label: string; value: number; max: number 
 
 function Tooltip({ text }: { text: string }) {
   return (
-    <span className="absolute -top-7 left-1/2 -translate-x-1/2 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-black text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap pointer-events-none z-10">
+    <span className="absolute -top-7 left-1/2 -translate-x-1/2 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-black/90 text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap pointer-events-none z-10 border border-purple-800/50">
       {text}
     </span>
   )

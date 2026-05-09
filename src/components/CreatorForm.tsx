@@ -97,7 +97,7 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
     <div className="grid lg:grid-cols-[1fr_360px] gap-8 items-start">
       <form onSubmit={handleSubmit} className="space-y-8 min-w-0">
       {/* Basis */}
-      <section className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-4">
+      <section className="bg-[#16102b]/80 backdrop-blur border border-purple-900/40 rounded-2xl p-6 space-y-4">
         <h2 className="font-semibold text-white">Profil</h2>
         <div className="grid grid-cols-2 gap-4">
           <Field label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
@@ -107,7 +107,7 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
         <Field label="Bio" value={form.bio} onChange={(v) => setForm({ ...form, bio: v })} multiline />
         <ImageUpload label="Banner Bild" value={form.banner_url} onChange={(v) => setForm({ ...form, banner_url: v })} aspect="banner" />
         <ImageUpload label="Profilbild" value={form.avatar_url} onChange={(v) => setForm({ ...form, avatar_url: v })} aspect="square" />
-        <label className="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
+        <label className="flex items-center gap-2 text-sm text-purple-200/80 cursor-pointer">
           <input
             type="checkbox"
             checked={form.active}
@@ -119,10 +119,10 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
       </section>
 
       {/* Geo Blocking */}
-      <section className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-4">
+      <section className="bg-[#16102b]/80 backdrop-blur border border-purple-900/40 rounded-2xl p-6 space-y-4">
         <div>
           <h2 className="font-semibold text-white">Geo Blocking</h2>
-          <p className="text-zinc-500 text-xs mt-1">Länder die keinen Zugriff auf diese Seite haben</p>
+          <p className="text-purple-300/50 text-xs mt-1">Länder die keinen Zugriff auf diese Seite haben</p>
         </div>
         <CountryBlocklist
           value={form.blocked_countries}
@@ -131,7 +131,7 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
       </section>
 
       {/* OF Card */}
-      <section className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-4">
+      <section className="bg-[#16102b]/80 backdrop-blur border border-purple-900/40 rounded-2xl p-6 space-y-4">
         <h2 className="font-semibold text-white">OnlyFans Card</h2>
         <Field label="OF Link" value={form.of_link} onChange={(v) => setForm({ ...form, of_link: v })} placeholder="https://onlyfans.com/..." />
         <ImageUpload label="Card Bild" value={form.of_card_image_url} onChange={(v) => setForm({ ...form, of_card_image_url: v })} aspect="card" />
@@ -139,13 +139,13 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
       </section>
 
       {/* Zusätzliche Links */}
-      <section className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-4">
+      <section className="bg-[#16102b]/80 backdrop-blur border border-purple-900/40 rounded-2xl p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-white">Weitere Links</h2>
           <button
             type="button"
             onClick={() => setFormLinks((prev) => [...prev, { title: '', url: '', icon: 'link', sort_order: prev.length, js_redirect: false, active: true }])}
-            className="flex items-center gap-1 text-sm text-zinc-400 hover:text-white"
+            className="flex items-center gap-1 text-sm text-purple-300/70 hover:text-white"
           >
             <Plus size={14} /> Link hinzufügen
           </button>
@@ -157,13 +157,13 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
                 placeholder="Titel (z.B. Instagram)"
                 value={link.title ?? ''}
                 onChange={(e) => updateLink(i, 'title', e.target.value)}
-                className="bg-zinc-800 border border-zinc-700 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-zinc-500"
+                className="bg-[#1f1638]/60 border border-purple-900/40 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-purple-500 transition-colors"
               />
               <input
                 placeholder="URL"
                 value={link.url ?? ''}
                 onChange={(e) => updateLink(i, 'url', e.target.value)}
-                className="bg-zinc-800 border border-zinc-700 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-zinc-500"
+                className="bg-[#1f1638]/60 border border-purple-900/40 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-purple-500 transition-colors"
               />
               <select
                 value={link.icon ?? 'link'}
@@ -174,7 +174,7 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
                 <option value="telegram">Telegram</option>
                 <option value="link">Link</option>
               </select>
-              <label className="flex items-center gap-2 text-xs text-zinc-400 px-1">
+              <label className="flex items-center gap-2 text-xs text-purple-300/70 px-1">
                 <input
                   type="checkbox"
                   checked={link.js_redirect ?? false}
@@ -186,7 +186,7 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
             <button
               type="button"
               onClick={() => setFormLinks((prev) => prev.filter((_, idx) => idx !== i))}
-              className="text-zinc-600 hover:text-red-400 mt-2"
+              className="text-purple-300/40 hover:text-red-400 mt-2"
             >
               <Trash2 size={16} />
             </button>
@@ -195,13 +195,13 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
       </section>
 
       {/* Galerie */}
-      <section className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-4">
+      <section className="bg-[#16102b]/80 backdrop-blur border border-purple-900/40 rounded-2xl p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-white">Galerie</h2>
           <button
             type="button"
             onClick={() => setGallery((prev) => [...prev, ''])}
-            className="flex items-center gap-1 text-sm text-zinc-400 hover:text-white"
+            className="flex items-center gap-1 text-sm text-purple-300/70 hover:text-white"
           >
             <Plus size={14} /> Bild hinzufügen
           </button>
@@ -233,14 +233,14 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
         <button
           type="submit"
           disabled={loading}
-          className="bg-white text-black font-semibold px-6 py-3 rounded-xl hover:bg-zinc-200 transition-colors disabled:opacity-50"
+          className="bg-gradient-to-br from-purple-500 to-purple-700 hover:from-purple-400 hover:to-purple-600 text-white font-semibold px-6 py-3 rounded-xl transition-all shadow-lg shadow-purple-900/50 disabled:opacity-50"
         >
           {loading ? 'Speichern...' : isNew ? 'Creator erstellen' : 'Änderungen speichern'}
         </button>
         <button
           type="button"
           onClick={() => router.push('/admin')}
-          className="text-zinc-400 hover:text-white px-4 py-3 transition-colors"
+          className="text-purple-300/70 hover:text-white px-4 py-3 transition-colors"
         >
           Abbrechen
         </button>
@@ -272,10 +272,10 @@ function Field({
   placeholder?: string
   multiline?: boolean
 }) {
-  const cls = "w-full bg-zinc-800 border border-zinc-700 text-white rounded-xl px-4 py-2.5 text-sm outline-none focus:border-zinc-500"
+  const cls = "w-full bg-[#1f1638]/60 border border-purple-900/40 text-white rounded-xl px-4 py-2.5 text-sm outline-none focus:border-purple-500 transition-colors"
   return (
     <label className="block space-y-1.5">
-      <span className="text-sm text-zinc-400">{label}</span>
+      <span className="text-sm text-purple-300/70">{label}</span>
       {multiline ? (
         <textarea
           value={value}
