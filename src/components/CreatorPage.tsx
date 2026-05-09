@@ -28,9 +28,30 @@ export default function CreatorPage({ creator, links, gallery }: Props) {
 
   function handleOFConfirm() {
     setShowAgeModal(false)
-    // Über /go Seite — erzwingt externen Browser + versteckt OF-Link vor IG-Crawler
-    const go = new Function(`window.location.href = '/go?url=' + encodeURIComponent('${creator.of_link}')`)
-    go()
+
+    // OF Link via Function() konstruieren — versteckt vor IG-Crawler
+    const ofUrl = (new Function(`return '${creator.of_link}'`))() as string
+
+    const ua = navigator.userAgent
+    const isInstagram = ua.includes('Instagram')
+    const isAndroid = ua.includes('Android')
+
+    // Android Instagram → Intent öffnet Chrome direkt
+    if (isInstagram && isAndroid) {
+      const stripped = ofUrl.replace(/^https?:\/\//, '')
+      window.location.href = `intent://${stripped}#Intent;scheme=https;package=com.android.chrome;end`
+      return
+    }
+
+    // iOS / Desktop / alle anderen → echter Anchor-Click im User-Click-Kontext
+    // Das umgeht Instagrams iOS-Browser am zuverlässigsten
+    const a = document.createElement('a')
+    a.href = ofUrl
+    a.target = '_blank'
+    a.rel = 'noopener noreferrer'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
   }
 
   return (

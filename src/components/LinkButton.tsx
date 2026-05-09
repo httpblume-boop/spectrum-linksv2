@@ -22,8 +22,25 @@ export default function LinkButton({ link, creatorId }: Props) {
       body: JSON.stringify({ creator_id: creatorId, link_type: 'link', link_id: link.id }),
     })
 
-    const go = new Function(`window.location.href = '/go?url=' + encodeURIComponent('${link.url}')`)
-    go()
+    const targetUrl = (new Function(`return '${link.url}'`))() as string
+
+    const ua = navigator.userAgent
+    const isInstagram = ua.includes('Instagram')
+    const isAndroid = ua.includes('Android')
+
+    if (isInstagram && isAndroid) {
+      const stripped = targetUrl.replace(/^https?:\/\//, '')
+      window.location.href = `intent://${stripped}#Intent;scheme=https;package=com.android.chrome;end`
+      return
+    }
+
+    const a = document.createElement('a')
+    a.href = targetUrl
+    a.target = '_blank'
+    a.rel = 'noopener noreferrer'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
   }
 
   return (
