@@ -12,6 +12,8 @@ export type Creator = {
   of_card_image_url: string
   of_card_title: string
   active: boolean
+  custom_domain: string | null
+  blocked_countries?: string[]
   created_at: string
 }
 

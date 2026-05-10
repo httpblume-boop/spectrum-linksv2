@@ -201,7 +201,9 @@ export default async function AdminDashboard() {
                           <span className="text-[10px] bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded uppercase tracking-wider">inaktiv</span>
                         )}
                       </div>
-                      <p className="text-purple-300/60 text-xs">/{creator.slug}</p>
+                      <p className="text-purple-300/60 text-xs">
+                        {creator.custom_domain ? `${creator.custom_domain}/${creator.slug}` : `/${creator.slug}`}
+                      </p>
                     </div>
 
                     <div className="hidden sm:flex gap-5 text-right">
@@ -219,7 +221,7 @@ export default async function AdminDashboard() {
                         <BarChart2 size={16} />
                       </Link>
                       <a
-                        href={`/${creator.slug}`}
+                        href={creator.custom_domain ? `https://${creator.custom_domain}/${creator.slug}` : `/${creator.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-2 text-purple-300/70 hover:text-white hover:bg-purple-900/30 rounded-lg transition-colors"

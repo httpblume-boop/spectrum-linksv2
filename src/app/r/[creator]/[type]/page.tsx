@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation'
 import { headers } from 'next/headers'
 import { getServiceClient } from '@/lib/supabase'
+import { findCreator } from '@/lib/lookupCreator'
 
-// Bot-User-Agents die wir nicht durchlassen wollen
 const BOT_PATTERNS = [
   /bot/i, /crawl/i, /spider/i, /facebook/i, /meta/i, /instagram.*crawler/i,
   /preview/i, /scraper/i, /linkpreview/i, /whatsapp/i, /telegram/i,
@@ -19,19 +19,14 @@ export default async function RedirectPage({
   const ua = headersList.get('user-agent') ?? ''
   const isBot = BOT_PATTERNS.some((pattern) => pattern.test(ua))
 
-  const supabase = getServiceClient()
-  const { data: creator } = await supabase
-    .from('creators')
-    .select('id, of_link')
-    .eq('slug', slug)
-    .single()
-
+  const creator = await findCreator(slug, headersList.get('host'))
   if (!creator) notFound()
 
   let url = ''
   if (type === 'of') {
     url = creator.of_link
   } else {
+    const supabase = getServiceClient()
     const { data: link } = await supabase
       .from('links')
       .select('url')
@@ -43,20 +38,15 @@ export default async function RedirectPage({
 
   if (!url) notFound()
 
-  // Bots sehen eine harmlose leere Seite — KEIN Redirect zu OF
   if (isBot) {
     return (
       <html>
         <head><title>Loading...</title></head>
-        <body>
-          <p>Loading...</p>
-        </body>
+        <body><p>Loading...</p></body>
       </html>
     )
   }
 
-  // Echte User: JS-Redirect (Bot kann kein JS ausführen)
-  // Track click in fire-and-forget mode
   return (
     <html>
       <head>

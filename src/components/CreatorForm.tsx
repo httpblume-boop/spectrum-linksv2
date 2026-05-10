@@ -29,6 +29,7 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
     of_card_image_url: creator?.of_card_image_url ?? '',
     of_card_title: creator?.of_card_title ?? '',
     active: creator?.active ?? true,
+    custom_domain: creator?.custom_domain ?? '',
     blocked_countries: (creator as Creator & { blocked_countries?: string[] })?.blocked_countries ?? [],
   })
 
@@ -52,11 +53,14 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
     try {
       let creatorId = creator?.id
 
+      // Leere Custom Domain → NULL (sonst greift die Lookup-Logik nicht)
+      const payload = { ...form, custom_domain: form.custom_domain?.trim() || null }
+
       if (isNew) {
         const res = await fetch('/api/admin/creators', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(form),
+          body: JSON.stringify(payload),
         })
         if (!res.ok) throw new Error((await res.json()).error)
         const data = await res.json()
@@ -65,7 +69,7 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
         const res = await fetch(`/api/admin/creators/${creator.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(form),
+          body: JSON.stringify(payload),
         })
         if (!res.ok) throw new Error((await res.json()).error)
       }
@@ -116,6 +120,22 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
           />
           Seite aktiv / öffentlich sichtbar
         </label>
+      </section>
+
+      {/* Custom Domain */}
+      <section className="bg-[#16102b]/80 backdrop-blur border border-purple-900/40 rounded-2xl p-6 space-y-4">
+        <div>
+          <h2 className="font-semibold text-white">Custom Domain</h2>
+          <p className="text-purple-300/50 text-xs mt-1">
+            Eigene Domain (z.B. <span className="text-purple-300">marina.com</span>) → Slug muss innerhalb der Domain unique sein
+          </p>
+        </div>
+        <Field
+          label="Domain (ohne https://)"
+          value={form.custom_domain}
+          onChange={(v) => setForm({ ...form, custom_domain: v.toLowerCase().replace(/^https?:\/\//, '').replace(/\/.*$/, '').trim() })}
+          placeholder="z.B. marina.com (leer lassen für Default)"
+        />
       </section>
 
       {/* Geo Blocking */}
