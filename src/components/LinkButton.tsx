@@ -1,6 +1,5 @@
 'use client'
 
-import { Link, Creator } from '@/lib/supabase'
 import { Send, ExternalLink } from 'lucide-react'
 
 const ICONS: Record<string, React.ReactNode> = {
@@ -9,15 +8,22 @@ const ICONS: Record<string, React.ReactNode> = {
   link: <ExternalLink size={18} />,
 }
 
-type Props = {
-  link: Link
-  creator: Creator
+// Nur UI-Felder — KEINE url!
+export type LinkPublic = {
+  id: string
+  title: string
+  icon: string
 }
 
-export default function LinkButton({ link, creator }: Props) {
+type Props = {
+  link: LinkPublic
+  creatorSlug: string
+}
+
+export default function LinkButton({ link, creatorSlug }: Props) {
   return (
     <a
-      href={`/r/${creator.slug}/${link.id}`}
+      href={`/r/${creatorSlug}/${link.id}`}
       target="_blank"
       rel="noopener noreferrer"
       referrerPolicy="no-referrer"

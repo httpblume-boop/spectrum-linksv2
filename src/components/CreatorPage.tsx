@@ -2,14 +2,27 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { Creator, Link, GalleryImage } from '@/lib/supabase'
+import { GalleryImage } from '@/lib/supabase'
 import AgeModal from './AgeModal'
 import GalleryModal from './GalleryModal'
-import LinkButton from './LinkButton'
+import LinkButton, { LinkPublic } from './LinkButton'
+
+// Nur die fürs UI nötigen Felder — KEIN of_link!
+export type CreatorPublic = {
+  id: string
+  slug: string
+  name: string
+  handle: string
+  bio: string
+  banner_url: string
+  avatar_url: string
+  of_card_image_url: string
+  of_card_title: string
+}
 
 type Props = {
-  creator: Creator
-  links: Link[]
+  creator: CreatorPublic
+  links: LinkPublic[]
   gallery: GalleryImage[]
 }
 
@@ -130,7 +143,7 @@ export default function CreatorPage({ creator, links, gallery }: Props) {
       {links.length > 0 && (
         <div className="w-full max-w-lg px-5 mt-4 flex flex-col gap-3">
           {links.map((link) => (
-            <LinkButton key={link.id} link={link} creator={creator} />
+            <LinkButton key={link.id} link={link} creatorSlug={creator.slug} />
           ))}
         </div>
       )}
