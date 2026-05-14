@@ -103,9 +103,10 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
       {/* Basis */}
       <section className="bg-[#16102b]/80 backdrop-blur border border-purple-900/40 rounded-2xl p-6 space-y-4">
         <h2 className="font-semibold text-white">Profil</h2>
+        <Field label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
         <div className="grid grid-cols-2 gap-4">
-          <Field label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
-          <Field label="Slug (URL)" value={form.slug} onChange={(v) => setForm({ ...form, slug: v.toLowerCase().replace(/\s/g, '-') })} required placeholder="z.B. marina" />
+          <Field label="Custom Domain" value={form.custom_domain} onChange={(v) => setForm({ ...form, custom_domain: v.toLowerCase().replace(/^https?:\/\//, '').replace(/\/.*$/, '').trim() })} placeholder="z.B. clairyy.com" />
+          <Field label="Slug (URL-Pfad)" value={form.slug} onChange={(v) => setForm({ ...form, slug: v.toLowerCase().replace(/\s/g, '-') })} required placeholder="z.B. marina" />
         </div>
         <Field label="@Handle" value={form.handle} onChange={(v) => setForm({ ...form, handle: v })} placeholder="z.B. marinaofficial" />
         <Field label="Bio" value={form.bio} onChange={(v) => setForm({ ...form, bio: v })} multiline />
@@ -120,22 +121,6 @@ export default function CreatorForm({ creator, links = [], galleryUrls = [] }: P
           />
           Seite aktiv / öffentlich sichtbar
         </label>
-      </section>
-
-      {/* Custom Domain */}
-      <section className="bg-[#16102b]/80 backdrop-blur border border-purple-900/40 rounded-2xl p-6 space-y-4">
-        <div>
-          <h2 className="font-semibold text-white">Custom Domain</h2>
-          <p className="text-purple-300/50 text-xs mt-1">
-            Eigene Domain (z.B. <span className="text-purple-300">marina.com</span>) → Slug muss innerhalb der Domain unique sein
-          </p>
-        </div>
-        <Field
-          label="Domain (ohne https://)"
-          value={form.custom_domain}
-          onChange={(v) => setForm({ ...form, custom_domain: v.toLowerCase().replace(/^https?:\/\//, '').replace(/\/.*$/, '').trim() })}
-          placeholder="z.B. marina.com (leer lassen für Default)"
-        />
       </section>
 
       {/* Geo Blocking */}
